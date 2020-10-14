@@ -27,6 +27,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     const feedbackCollection = client.db("creativeAgency").collection("feedbacks");
     const serviceCollection = client.db("creativeAgency").collection("services");
+    const orderCollection = client.db("creativeAgency").collection("orders");
     console.log("connected");
 
     // app.post('/addAppointment', (req, res) => {
@@ -61,24 +62,26 @@ client.connect(err => {
     //         })
     // })
 
-    // app.post('/addADoctor', (req, res) => {
-    //     const file = req.files.file;
-    //     const name = req.body.name;
-    //     const email = req.body.email;
-    //     const newImg = file.data;
-    //     const encImg = newImg.toString('base64');
+    app.post('/addOrder', (req, res) => {
+        const file = req.files.file;
+        const userName = req.body.userName;
+        const email = req.body.email;
+        const name = req.body.name;
+        const details = req.body.details;
+        const price = req.body.price;
+        const encImg = file.data.toString('base64');
 
-    //     var image = {
-    //         contentType: file.mimetype,
-    //         size: file.size,
-    //         img: Buffer.from(encImg, 'base64')
-    //     };
+        const image = {
+            contentType: file.mimetype,
+            size: file.size,
+            img: Buffer.from(encImg, 'base64')
+        };
 
-    //     doctorCollection.insertOne({ name, email, image })
-    //         .then(result => {
-    //             res.send(result.insertedCount > 0);
-    //         })
-    // })
+        orderCollection.insertOne({ userName, email, name, email, details, price, image })
+            .then(result => {
+                res.send(result.insertedCount > 0);
+            })
+    })
 
     app.get('/feedbacks', (req, res) => {
         feedbackCollection.find({})
