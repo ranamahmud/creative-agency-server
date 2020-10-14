@@ -45,6 +45,14 @@ client.connect(err => {
             })
     })
 
+    app.get('/services/:email', (req, res) => {
+        console.log(req.params.email)
+        orderCollection.find({ email: req.params.email })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
     // app.post('/appointmentsByDate', (req, res) => {
     //     const date = req.body;
     //     const email = req.body.email;
