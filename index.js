@@ -25,75 +25,75 @@ app.get('/', (req, res) => {
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-    const appointmentCollection = client.db("creativeAgency").collection("services");
-    const doctorCollection = client.db("creativeAgency").collection("doctors");
+    const feedbackCollection = client.db("creativeAgency").collection("feedbacks");
+    const serviceCollection = client.db("creativeAgency").collection("services");
     console.log("connected");
 
-    app.post('/addAppointment', (req, res) => {
-        const appointment = req.body;
-        appointmentCollection.insertOne(appointment)
-            .then(result => {
-                res.send(result.insertedCount > 0)
-            })
-    });
+    // app.post('/addAppointment', (req, res) => {
+    //     const appointment = req.body;
+    //     appointmentCollection.insertOne(appointment)
+    //         .then(result => {
+    //             res.send(result.insertedCount > 0)
+    //         })
+    // });
 
-    app.get('/appointments', (req, res) => {
-        appointmentCollection.find({})
+    app.get('/services', (req, res) => {
+        serviceCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             })
     })
 
-    app.post('/appointmentsByDate', (req, res) => {
-        const date = req.body;
-        const email = req.body.email;
-        doctorCollection.find({ email: email })
-            .toArray((err, doctors) => {
-                const filter = { date: date.date }
-                if (doctors.length === 0) {
-                    filter.email = email;
-                }
-                appointmentCollection.find(filter)
-                    .toArray((err, documents) => {
-                        console.log(email, date.date, doctors, documents)
-                        res.send(documents);
-                    })
-            })
-    })
+    // app.post('/appointmentsByDate', (req, res) => {
+    //     const date = req.body;
+    //     const email = req.body.email;
+    //     doctorCollection.find({ email: email })
+    //         .toArray((err, doctors) => {
+    //             const filter = { date: date.date }
+    //             if (doctors.length === 0) {
+    //                 filter.email = email;
+    //             }
+    //             appointmentCollection.find(filter)
+    //                 .toArray((err, documents) => {
+    //                     console.log(email, date.date, doctors, documents)
+    //                     res.send(documents);
+    //                 })
+    //         })
+    // })
 
-    app.post('/addADoctor', (req, res) => {
-        const file = req.files.file;
-        const name = req.body.name;
-        const email = req.body.email;
-        const newImg = file.data;
-        const encImg = newImg.toString('base64');
+    // app.post('/addADoctor', (req, res) => {
+    //     const file = req.files.file;
+    //     const name = req.body.name;
+    //     const email = req.body.email;
+    //     const newImg = file.data;
+    //     const encImg = newImg.toString('base64');
 
-        var image = {
-            contentType: file.mimetype,
-            size: file.size,
-            img: Buffer.from(encImg, 'base64')
-        };
+    //     var image = {
+    //         contentType: file.mimetype,
+    //         size: file.size,
+    //         img: Buffer.from(encImg, 'base64')
+    //     };
 
-        doctorCollection.insertOne({ name, email, image })
-            .then(result => {
-                res.send(result.insertedCount > 0);
-            })
-    })
+    //     doctorCollection.insertOne({ name, email, image })
+    //         .then(result => {
+    //             res.send(result.insertedCount > 0);
+    //         })
+    // })
 
-    app.get('/doctors', (req, res) => {
-        doctorCollection.find({})
+    app.get('/feedbacks', (req, res) => {
+        feedbackCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             })
     });
 
-    app.post('/isDoctor', (req, res) => {
-        const email = req.body.email;
-        doctorCollection.find({ email: email })
-            .toArray((err, doctors) => {
-                res.send(doctors.length > 0);
-            })
-    })
+    // app.post('/isDoctor', (req, res) => {
+    //     const email = req.body.email;
+    //     doctorCollection.find({ email: email })
+    //         .toArray((err, doctors) => {
+    //             res.send(doctors.length > 0);
+    //         })
+    // })
 
 });
 
