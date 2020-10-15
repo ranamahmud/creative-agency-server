@@ -47,7 +47,6 @@ client.connect(err => {
     })
 
     app.get('/services/:email', (req, res) => {
-        console.log(req.params.email)
         orderCollection.find({ email: req.params.email })
             .toArray((err, documents) => {
                 res.send(documents);
@@ -109,7 +108,24 @@ client.connect(err => {
                 res.send(documents);
             })
     });
+    app.post('/makeAdmin', (req, res) => {
+        console.log('makeAdmin');
+        // const name = req.body.name;
+        const email = req.body.email;
+        // const newImg = file.data;
+        // const encImg = newImg.toString('base64');
 
+        // var image = {
+        //     contentType: file.mimetype,
+        //     size: file.size,
+        //     img: Buffer.from(encImg, 'base64')
+        // };
+
+        adminCollection.insertOne({ email })
+            .then(result => {
+                res.send(result.insertedCount > 0);
+            })
+    })
     app.post('/isAdmin', (req, res) => {
         const email = req.body.email;
         adminCollection.find({ email: email })
