@@ -28,6 +28,7 @@ client.connect(err => {
     const feedbackCollection = client.db("creativeAgency").collection("feedbacks");
     const serviceCollection = client.db("creativeAgency").collection("services");
     const orderCollection = client.db("creativeAgency").collection("orders");
+    const adminCollection = client.db("creativeAgency").collection("admins");
     console.log("connected");
 
     // app.post('/addAppointment', (req, res) => {
@@ -109,13 +110,13 @@ client.connect(err => {
             })
     });
 
-    // app.post('/isDoctor', (req, res) => {
-    //     const email = req.body.email;
-    //     doctorCollection.find({ email: email })
-    //         .toArray((err, doctors) => {
-    //             res.send(doctors.length > 0);
-    //         })
-    // })
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminCollection.find({ email: email })
+            .toArray((err, doctors) => {
+                res.send(doctors.length > 0);
+            })
+    })
 
 });
 
