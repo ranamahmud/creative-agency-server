@@ -52,7 +52,18 @@ client.connect(err => {
                 res.send(documents);
             })
     })
+    app.post('/addReview', (req, res) => {
+        const review = req.body
+        feedbackCollection.insertOne(review)
+            .then(result => {
+                if (result.insertedCount > 0) {
+                    res.sendStatus(200)
+                } else {
+                    result.sendStatus(404)
+                }
+            })
 
+    })
     // app.post('/appointmentsByDate', (req, res) => {
     //     const date = req.body;
     //     const email = req.body.email;
