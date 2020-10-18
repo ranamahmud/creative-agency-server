@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config()
 
 
@@ -46,6 +47,13 @@ client.connect(err => {
             })
     })
 
+    app.get('/orders', (req, res) => {
+        orderCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
     app.get('/services/:email', (req, res) => {
         orderCollection.find({ email: req.params.email })
             .toArray((err, documents) => {
@@ -63,6 +71,19 @@ client.connect(err => {
                 }
             })
 
+    })
+
+    // Upload the order status
+
+    app.patch("/updateOrders/:id", (req, res) => {
+        orderCollection.updateOne({ _id: ObjectId(req.params.id) },
+
+            {
+                $set: { status: req.body.status }
+            })
+            .then(result => {
+                res.send(result.modifiedCount > 0)
+            })
     })
     // app.post('/appointmentsByDate', (req, res) => {
     //     const date = req.body;
